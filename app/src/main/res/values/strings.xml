@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">VRVT-MD2</string>
+    <string name="Map">Map</string>
+    <string name="Json">Json</string>
 </resources>
