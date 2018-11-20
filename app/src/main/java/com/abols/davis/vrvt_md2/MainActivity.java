@@ -62,20 +62,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_LOCATION);
+            onMapReady(googleMap);
         } else {
             mMap.setMyLocationEnabled(true);
+            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
+            String provider = locationManager.getBestProvider(criteria, true);
+            Location location = locationManager.getLastKnownLocation(provider);
+            if (location != null) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                LatLng latLng = new LatLng(latitude, longitude);
+                CameraPosition poz = CameraPosition.builder().target(latLng).zoom(15f).bearing(0).build();
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(poz));
+            }
         }
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String provider = locationManager.getBestProvider(criteria, true);
-        Location location = locationManager.getLastKnownLocation(provider);
-        if (location != null) {
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-            LatLng latLng = new LatLng(latitude, longitude);
-            CameraPosition poz = CameraPosition.builder().target(latLng).zoom(15f).bearing(0).build();
-            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(poz));
-        }
+
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 }
